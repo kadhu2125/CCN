@@ -1,0 +1,83 @@
+
+#include<stdio.h>
+#include<stdlib.h>
+#include<conio.h>
+
+void main()
+{
+    int frames, i, ack, received;
+    clrscr();
+    printf("\t STOP AND WAIT PROTOCOL\n\n");
+    printf("Enter the total number of frames: ");
+    scanf("%d", &frames);
+    printf("\n");
+
+    for (i = 1; i <= frames; i++)
+    {
+        ack = 0;
+        received = 0;
+        while (ack == 0)
+        {
+            printf("Sender   : Sending frame %d\n", i);
+            if (rand() % 4 == 0)
+            {
+                printf("Network  : Frame %d lost\n", i);
+                printf("Sender   : Timeout, retransmitting frame %d\n", i);
+            }
+            else
+            {
+                if (received == 1)
+                    printf("Receiver : Duplicate frame %d discarded\n", i);
+                else
+                    printf("Receiver : Frame %d received\n", i);
+                received = 1;
+
+                if (rand() % 4 == 0)
+                {
+                    printf("Network  : ACK %d lost\n", i);
+                    printf("Sender   : Timeout, retransmitting frame %d\n", i);
+                }
+                else
+                {
+                    printf("Sender   : ACK %d received\n", i);
+                    ack = 1;
+                }
+            }
+        }
+        printf("-----------------------------------------\n");
+    }
+    printf("\nAll %d frames sent successfully.\n", frames);
+    getch();
+}
+Output
+         STOP AND WAIT PROTOCOL
+ 
+Enter the total number of frames: 5
+ 
+Sender   : Sending frame 1
+Receiver : Frame 1 received
+Sender   : ACK 1 received
+-----------------------------------------
+Sender   : Sending frame 2
+Receiver : Frame 2 received
+Sender   : ACK 2 received
+-----------------------------------------
+Sender   : Sending frame 3
+Receiver : Frame 3 received
+Sender   : ACK 3 received
+-----------------------------------------
+Sender   : Sending frame 4
+Receiver : Frame 4 received
+Network  : ACK 4 lost
+Sender   : Timeout, retransmitting frame 4
+Sender   : Sending frame 4
+Receiver : Duplicate frame 4 discarded
+Sender   : ACK 4 received
+-----------------------------------------
+Sender   : Sending frame 5
+Receiver : Frame 5 received
+Sender   : ACK 5 received
+-----------------------------------------
+ 
+All 5 frames sent successfully.
+ 
