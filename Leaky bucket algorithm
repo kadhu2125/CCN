@@ -1,0 +1,70 @@
+include<stdio.h>
+#include<conio.h>
+
+void main()
+{
+    int cap, rate, n, i, pkt[20], store = 0, sent, t;
+    clrscr();
+    printf("\t LEAKY BUCKET ALGORITHM\n\n");
+    printf("Enter the bucket size (capacity) : ");
+    scanf("%d", &cap);
+    printf("Enter the output rate            : ");
+    scanf("%d", &rate);
+    printf("Enter the number of packets      : ");
+    scanf("%d", &n);
+    for (i = 0; i < n; i++)
+    {
+        printf("Enter the size of packet %d       : ", i + 1);
+        scanf("%d", &pkt[i]);
+    }
+
+    printf("\nTime  Packet  Status      Sent  Remaining in bucket\n");
+    printf("--------------------------------------------------\n");
+    for (i = 0; i < n; i++)
+    {
+        printf("%-6d%-8d", i + 1, pkt[i]);
+        if (pkt[i] + store > cap)
+            printf("%-12s", "DROPPED");
+        else
+        {
+            store = store + pkt[i];
+            printf("%-12s", "ACCEPTED");
+        }
+        sent = (store < rate) ? store : rate;
+        store = store - sent;
+        printf("%-6d%d\n", sent, store);
+    }
+
+    t = n;
+    while (store > 0)
+    {
+        t++;
+        sent = (store < rate) ? store : rate;
+        store = store - sent;
+        printf("%-6d%-8s%-12s%-6d%d\n", t, "-", "LEAKING", sent, store);
+    }
+    printf("\nBucket is empty. All accepted data transmitted.\n");
+    getch();
+}
+Output
+         LEAKY BUCKET ALGORITHM
+ 
+Enter the bucket size (capacity) : 10
+Enter the output rate            : 4
+Enter the number of packets      : 5
+Enter the size of packet 1       : 4
+Enter the size of packet 2       : 6
+Enter the size of packet 3       : 9
+Enter the size of packet 4       : 2
+Enter the size of packet 5       : 3
+ 
+Time  Packet  Status      Sent  Remaining in bucket
+--------------------------------------------------
+1     4       ACCEPTED    4     0
+2     6       ACCEPTED    4     2
+3     9       DROPPED     2     0
+4     2       ACCEPTED    2     0
+5     3       ACCEPTED    3     0
+ 
+Bucket is empty. All accepted data transmitted.
+ 
