@@ -1,0 +1,96 @@
+
+#include<stdio.h>
+#include<conio.h>
+
+/* Sliding window protocol - Go Back N */
+void main()
+{
+    int n, w, lost, lostdone = 0;
+    int i, j, k, end, flag;
+    clrscr();
+    printf("\t SLIDING WINDOW PROTOCOL (Go-Back-N)\n\n");
+    printf("Enter the total number of frames : ");
+    scanf("%d", &n);
+    printf("Enter the window size            : ");
+    scanf("%d", &w);
+    printf("Enter the frame number to be lost (0 for none): ");
+    scanf("%d", &lost);
+    printf("\n");
+
+    i = 1;
+    while (i <= n)
+    {
+        end = i + w - 1;
+        if (end > n)
+            end = n;
+
+        printf("Sender   : Window [%d - %d]\n", i, end);
+        for (j = i; j <= end; j++)
+            printf("Sender   : Sending frame %d\n", j);
+
+        flag = 0;
+        for (j = i; j <= end; j++)
+        {
+            if (j == lost && lostdone == 0)
+            {
+                printf("Receiver : Frame %d lost\n", j);
+                for (k = j + 1; k <= end; k++)
+                    printf("Receiver : Frame %d discarded (out of order)\n", k);
+                printf("Sender   : Timeout, go back to frame %d\n", j);
+                lostdone = 1;
+                flag = 1;
+                i = j;
+                break;
+            }
+            printf("Receiver : Frame %d received, ACK %d sent\n", j, j);
+        }
+
+        if (flag == 0)
+        {
+            printf("Sender   : Window slides forward\n");
+            i = end + 1;
+        }
+        printf("-----------------------------------------\n");
+    }
+    printf("\nAll frames delivered successfully.\n");
+    getch();
+}
+Output
+         SLIDING WINDOW PROTOCOL (Go-Back-N)
+ 
+Enter the total number of frames : 8
+Enter the window size            : 4
+Enter the frame number to be lost (0 for none): 3
+ 
+Sender   : Window [1 - 4]
+Sender   : Sending frame 1
+Sender   : Sending frame 2
+Sender   : Sending frame 3
+Sender   : Sending frame 4
+Receiver : Frame 1 received, ACK 1 sent
+Receiver : Frame 2 received, ACK 2 sent
+Receiver : Frame 3 lost
+Receiver : Frame 4 discarded (out of order)
+Sender   : Timeout, go back to frame 3
+-----------------------------------------
+Sender   : Window [3 - 6]
+Sender   : Sending frame 3
+Sender   : Sending frame 4
+Sender   : Sending frame 5
+Sender   : Sending frame 6
+Receiver : Frame 3 received, ACK 3 sent
+Receiver : Frame 4 received, ACK 4 sent
+Receiver : Frame 5 received, ACK 5 sent
+Receiver : Frame 6 received, ACK 6 sent
+Sender   : Window slides forward
+-----------------------------------------
+Sender   : Window [7 - 8]
+Sender   : Sending frame 7
+Sender   : Sending frame 8
+Receiver : Frame 7 received, ACK 7 sent
+Receiver : Frame 8 received, ACK 8 sent
+Sender   : Window slides forward
+-----------------------------------------
+ 
+All frames delivered successfully.
+ 
